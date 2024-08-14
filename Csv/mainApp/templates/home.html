@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <!-- <link rel="stylesheet" href="{% static 'main.css' %}"> -->
+    <title>Parse CSV File</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #f6f7fa; /* Primary color */
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        #drop-area {
+            border: 2px dashed #6a66ee; /* Accent color */
+            border-radius: 20px;
+            width: 300px;
+            height: 200px;
+            padding: 20px;
+            text-align: center;
+            margin: 0 auto;
+            background-color: #d2d2ec; /* Secondary color */
+        }
+        .red {
+            color: red;
+        }
+        .hidden {
+            display: none;
+        }
+        .button {
+            background-color: #6a66ee; /* Accent color */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #fileName{
+            color: red;
+            line-height: 1.2rem;
+        }
+        .button:hover {
+            background-color: #5a56dd;
+        }
+        .container {
+            
+            
+            padding: 20px;
+        }
+        .header, .footer {
+            background-color: #d2d2ec; /* Secondary color */
+            padding: 10px;
+            text-align: center;
+        }
+        .content {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CSV File Management</h1>
+        </div>
+        
+        <div class="content">
+            <h3 align="center">Please Upload CSV File</h3>
+            <br>
+            <div id="drop-area">
+                <form method="post" enctype="multipart/form-data" id="uploadForm">
+                    {% csrf_token %}
+                    Select File: <input type="file" id="fileElem" name="myfile" class="hidden">
+                    <label for="fileElem" id="fileLabel">Drag & Drop your file here or click to select</label>
+                    <span id="fileName">No file chosen</span>
+                    <button type="submit" class="button">Upload File</button>
+                </form>
+            </div>
+            <br>
+            <div align="center" class="red">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    <p{% if message.tags %} class="" {% endif %}>{{ message }}</p>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div align="center">
+                {% if messages %}
+                    <a href="{% url 'item-list-view' %}">
+                        <button class="button">View Items</button>
+                    </a>
+                {% endif %}
+            </div>
+            <div align="center">
+                <h4>Instructions</h4>
+                <p>To upload a CSV file, drag and drop the file into the designated area or click to select the file from your device. Once uploaded, you can view the items by clicking the "View Items" button.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 CSV File Management. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+<script>
+    const dropArea = document.getElementById('drop-area');
+    const fileInput = document.getElementById('fileElem');
+    const fileLabel = document.getElementById('fileLabel');
+    const uploadForm = document.getElementById('uploadForm');
+
+    dropArea.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropArea.classList.add('active');
+    });
+
+    dropArea.addEventListener('dragleave', () => {
+        dropArea.classList.remove('active');
+    });
+
+    dropArea.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dropArea.classList.remove('active');
+        fileInput.files = event.dataTransfer.files;
+        if (fileInput.files.length > 0) {
+            fileLabel.textContent = fileInput.files[0].name;
+            document.getElementById('fileName').textContent = fileInput.files[0].name;
+        }
+    });
+
+    dropArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        e.preventDefault();
+        if (fileInput.files.length > 0) {
+            document.getElementById('fileName').textContent = fileInput.files[0].name;
+            fileLabel.textContent = fileInput.files[0].name;
+        }
+    });
+</script>
+
+</html>

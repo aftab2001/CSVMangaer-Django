@@ -1,0 +1,24 @@
+@import url('main.css');
+
+table{
+    outline: none;
+    border: none;
+    /* border: 1px solid black; */
+    
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f6f7fa; /* Primary color */
+    color: #343167; /* Dark color for text */
+    margin: 0;
+    padding: 0;
+}
+.container{
+    /* width: 560px; */
+    color: white;
+    border: 1px solid black;
+
+}
+.paginator{
+    display: inline-block;
+}

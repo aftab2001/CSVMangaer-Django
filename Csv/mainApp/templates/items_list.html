@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f6f7fa; /* Primary color */
+            color: #343167; /* Dark color for text */
+            margin: 0;
+            padding: 0;
+        }
+       
+        .container {
+            min-height: 100vh;
+            width: 90vw;
+            max-width: 600px;
+            margin: 10px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        h1, h2 {
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #343167; /* Dark color for headings */
+        }
+        form input, form button {
+            display: block;
+            width: 100%;
+            line-height: 1.5rem;
+            border-radius: 8px;
+            margin: 10px 0;
+            padding: 10px 15px;
+            outline: none;
+            border: 1px solid #d2d2ec; /* Secondary color for borders */
+            font-size: 1rem;
+        }
+        form button {
+            background-color: #6a66ee; /* Accent color */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #343167; /* Darker shade for hover */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #d2d2ec; /* Secondary color for borders */
+        }
+        thead tr {
+            background-color: #abade4; /* Light shade for table header */
+        }
+        .pagination,.export-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .left,.right{
+            padding: 5px 8px;
+            background-color: #abade4;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+        .left *{color: white;}
+        
+        .pagination a {
+            color: #6a66ee; /* Accent color for links */
+            text-decoration: none;
+        }
+        .export-buttons a{
+            background: #000;
+            color: white;
+            outline: none;
+            line-height: 1.3rem;
+            padding: 5px 12px;
+            border-radius: 8px;
+        }
+        .pagination a:hover {
+            text-decoration: underline;
+        }
+        .export-buttons a:hover{
+            color: black;
+            background-color:#f6f7fa
+        }
+        .pagination .middle {
+            font-weight: 600;
+        }
+        th,td{text-align: center;}
+    </style>
+    <title>Items List</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Item List</h1>
+        <form method="get">
+            <input type="text" name="name" placeholder="Item Name" value="{{ query_name }}">
+            <input type="text" name="code" placeholder="Item Code" value="{{ query_code }}">
+            <input type="text" name="vendor" placeholder="Vendor Name" value="{{ query_vendor }}">
+            <button type="submit">Search</button>
+        </form>
+        <h2>Results</h2>
+        {% if items %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Item Code</th>
+                        <th>Vendor Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.code }}</td>
+                            <td>{{ item.vendor }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+                {% if items.has_previous %}
+                <div class="left">
+                        <a href="?page={{ items.previous_page_number }}&name={{ query_name }}&code={{ query_code }}&vendor={{ query_vendor }}"> &larr;Previous</a>
+                    </div>
+                    {% endif %}
+                <div class="middle">
+                    <span>Page {{ items.number }} of {{ items.paginator.num_pages }}</span>
+                </div>
+                {% if items.has_next %}
+                <div class="right">
+                        <a href="?page={{ items.next_page_number }}&name={{ query_name }}&code={{ query_code }}&vendor={{ query_vendor }}">Next &rarr;</a>
+                    </div>
+                    {% endif %}
+            </div>
+        {% else %}
+            <p>No items found.</p>
+        {% endif %}
+        <div class="export-buttons">
+
+            <a href="?format=csv&name={{ query_name }}&code={{ query_code }}&vendor={{ query_vendor }}">Export as CSV</a>
+            <a href="?format=pdf&name={{ query_name }}&code={{ query_code }}&vendor={{ query_vendor }}">Export as PDF</a>
+        </div>
+    </div>
+</body>
+</html>
